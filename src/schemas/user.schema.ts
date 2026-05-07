@@ -8,6 +8,7 @@ export const UserSchema = z.object({
   name: z.string().openapi({ example: 'Jane Doe' }),
   email: z.string().email().openapi({ example: 'jane@example.com' }),
   createdAt: z.string().datetime().openapi({ example: '2026-05-07T10:00:00Z' }),
+  role: z.enum(['admin', 'user']).openapi({ example: 'user' }),
 }).openapi('User');
 
 export const CreateUserSchema = z.object({
