@@ -1,6 +1,7 @@
 import { OpenAPIRegistry, OpenApiGeneratorV31 } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
 import { UserSchema, CreateUserSchema } from '../schemas/user.schema';
+import { PostSchema } from '../schemas/post.schema';
 
 export const registry = new OpenAPIRegistry();
 
@@ -8,6 +9,22 @@ const IdParam = z.object({ id: z.string().uuid().openapi({ example: '550e8400-e2
 
 registry.register('User', UserSchema);
 registry.register('CreateUser', CreateUserSchema);
+registry.register('Post', PostSchema);
+
+registry.registerPath({
+  method: 'get',
+  path: '/users/{id}/posts',
+  summary: 'Get posts for a user',
+  tags: ['Posts'],
+  request: { params: IdParam },
+  responses: {
+    200: {
+      description: 'Array of posts',
+      content: { 'application/json': { schema: z.array(PostSchema) } },
+    },
+    404: { description: 'User not found' },
+  },
+});
 
 registry.registerPath({
   method: 'get',
