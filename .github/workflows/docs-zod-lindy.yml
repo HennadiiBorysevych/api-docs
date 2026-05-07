@@ -34,16 +34,3 @@ jobs:
           commit_message: 'docs: regenerate openapi spec'
           file_pattern: openapi.json
 
-      # Add LINDY_WEBHOOK_URL to your repo secrets to enable this step
-      - name: Notify Lindy
-        env:
-          LINDY_WEBHOOK_URL: ${{ secrets.LINDY_WEBHOOK_URL }}
-        run: |
-          if [ -z "$LINDY_WEBHOOK_URL" ]; then
-            echo "LINDY_WEBHOOK_URL not set, skipping"
-            exit 0
-          fi
-          SPEC_URL="https://raw.githubusercontent.com/${{ github.repository }}/main/openapi.json"
-          curl -s -X POST "$LINDY_WEBHOOK_URL" \
-            -H "Content-Type: application/json" \
-            -d "{\"specUrl\": \"$SPEC_URL\", \"service\": \"test-api\", \"commit\": \"${{ github.sha }}\"}"
